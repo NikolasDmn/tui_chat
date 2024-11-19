@@ -1,4 +1,5 @@
 use std::io::{Read, Write};
+pub mod listener;
 
 use std::u8;
 use std::{
@@ -14,7 +15,7 @@ use std::{
 const SELF_NAME: &str = "Me";
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
-enum MessageType {
+pub enum MessageType {
     Text = 0,
     NameChange = 1,
     Encryption = 2,
@@ -35,19 +36,19 @@ impl MessageType {
 }
 
 #[derive(Debug, Clone)]
-struct Message {
-    time: SystemTime,
-    sent_by_self: bool,
-    sender_name: String,
-    message_type: MessageType,
-    content: String,
+pub struct Message {
+    pub time: SystemTime,
+    pub sent_by_self: bool,
+    pub sender_name: String,
+    pub message_type: MessageType,
+    pub content: String,
 }
 
-struct Connection {
-    name: Arc<Mutex<String>>,
+pub struct Connection {
+    pub name: Arc<Mutex<String>>,
     stream: Arc<Mutex<TcpStream>>,
     is_alive: Arc<AtomicBool>,
-    messages: Arc<Mutex<Vec<Message>>>,
+    pub messages: Arc<Mutex<Vec<Message>>>,
 }
 
 impl Connection {
@@ -71,6 +72,9 @@ impl Connection {
         }
     }
 
+    pub fn get_name(&self) -> String {
+        self.name.lock().unwrap().clone()
+    }
     pub fn register_listener(connection: Arc<Mutex<Self>>) {
         let mut conn = Arc::clone(&connection);
 

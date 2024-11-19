@@ -1,5 +1,6 @@
 mod networking;
-
-fn main() {
-    println!("Hello, world!");
+mod tui;
+use std::io;
+fn main() -> io::Result<()> {
+    tui::start()
 }
